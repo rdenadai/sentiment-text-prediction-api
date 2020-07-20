@@ -1,1 +1,1 @@
-web: gunicorn src.application:app --access-logfile gunicorn_access.log --error-logfile gunicorn_error.log -w 3 -k uvicorn.workers.UvicornWorker
+web: python -m nltk.downloader stopwords; python -m nltk.downloader punkt; python -m nltk.downloader rslp; python -m spacy download en; python -m spacy download pt; gunicorn src.application:app --access-logfile gunicorn_access.log --error-logfile gunicorn_error.log -w 3 -k uvicorn.workers.UvicornWorker
