@@ -3,7 +3,7 @@ black==19.10b0
 python-decouple==3.3
 pandas==1.0.3
 nltk==3.5
-spacy==2.2.4
+spacy==2.3.2
 # gensim==3.8.3
 # Keras==2.4.3
 # tensorflow-gpu==2.2.0
