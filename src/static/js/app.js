@@ -4,14 +4,6 @@ import { html, Component, render } from '/static/js/preact.standalone.module.js'
 
 class App extends Component {
 
-    state = {
-
-    };
-
-    componentDidMount() {
-
-    }
-
     render() {
         return html`
             <div>
@@ -37,23 +29,54 @@ class App extends Component {
 
 class PredictForm extends Component {
 
-    componentDidMount() {
+    constructor() {
+        super();
+        this.state = {
+            phrase: "",
+            data: null
+        };
     }
 
-    render() {
+    onInput = e => {
+        const { value } = e.target;
+        this.setState({ phrase: value })
+    }
+
+    onSubmit = e => {
+        e.preventDefault();
+
+        var this_ = this;
+
+        axios({
+            method: "post",
+            url: "/classify",
+            data: {
+                "value": this.state.phrase,
+                "classifier": "naive"
+            },
+        }).then(function (response) {
+            if (response.status == 200) {
+                this_.setState({ data: response.data });
+            }
+        });
+    }
+
+    render(_, { value }) {
         return html`
             <div class="siimple-card" style="max-width: auto;">
                 <div class="siimple-card-body">
                     <div class="siimple-card-title">Avaliar classificador de emoções:</div>
                     <div class="siimple-rule"></div>
                     <div class="siimple-field">
-                        <div class="siimple-field">
-                            <div class="siimple-field-label">Digite uma frase:</div>
-                            <textarea class="siimple-textarea siimple-textarea--fluid" rows="10"></textarea>
-                        </div>
-                        <div class="siimple-field">
-                            <span class="siimple-btn siimple-btn--success">Classificar</span>
-                        </div>
+                        <form onSubmit=${this.onSubmit}>
+                            <div class="siimple-field">
+                                <div class="siimple-field-label">Digite uma frase:</div>
+                                <textarea class="siimple-textarea siimple-textarea--fluid" rows="10" onInput=${this.onInput}>${this.phrase}</textarea>
+                            </div>
+                            <div class="siimple-field">
+                                <button type="submit" class="siimple-btn siimple-btn--success">Classificar</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>

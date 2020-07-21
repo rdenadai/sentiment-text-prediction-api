@@ -4,9 +4,7 @@ import warnings
 
 warnings.filterwarnings("ignore")
 
-from string import punctuation
 import pandas as pd
-from nltk import word_tokenize
 from nltk.stem import RSLPStemmer, SnowballStemmer
 import spacy
 
@@ -67,6 +65,12 @@ class EmotionNaiveClassifier:
             "medo": 0,
             "raiva": 0,
             "tristeza": 0,
+            "desprezo": 0,
+            "remorso": 0,
+            "desaprovação": 0,
+            "temor": 0,
+            "submissão": 0,
+            "amor": 0,
         }
         verificar_negacao = True if "não" in phrase or "sem" in phrase else False
 
@@ -87,6 +91,7 @@ class EmotionNaiveClassifier:
                 }
             )
 
+        n_words = 1
         for i, token in enumerate(phrase):
             for sent, df in self.dataset:
                 word = token.text
@@ -97,12 +102,16 @@ class EmotionNaiveClassifier:
                     if verificar_negacao:
                         for m in range(self.neg):
                             if i - m >= 0:
-                                if phrase[i - m] == "não" or phrase[i - m] == "sem":
+                                if (
+                                    phrase[i - m].text == "não"
+                                    or phrase[i - m].text == "sem"
+                                ):
                                     negando = True
                                     break
 
                     if not negando:
                         coef_[sent] += 1
+                        n_words += 1
                     else:
                         if sent == "surpresa":
                             coef_["tristeza"] += 0.25
@@ -114,23 +123,34 @@ class EmotionNaiveClassifier:
                             coef_["desgosto"] += 0.25
                         elif sent == "desgosto":
                             coef_["alegria"] += 0.25
+                            coef_["confiança"] += 0.1
                         elif sent == "tristeza":
                             coef_["alegria"] += 0.25
-                            coef_["confiança"] += 0.15
+                            coef_["confiança"] += 0.05
 
         coef_ = {sent: round(val, 3) for sent, val in coef_.items()}
-        coef_["tristeza"] += coef_["medo"] * 1e-1
-        coef_["tristeza"] += coef_["raiva"] * 1e-1
         coef_["confiança"] -= coef_["medo"] * 1e-1
         coef_["confiança"] = 0.0 if coef_["confiança"] < 0.0 else coef_["confiança"]
         coef_["raiva"] += coef_["medo"] * 1e-2
         coef_["raiva"] += coef_["desgosto"] * 1e-2
         coef_["alegria"] += coef_["confiança"] * 1e-2
-        coef_["alegria"] += coef_["surpresa"] * 1e-2
-        coef_ = {
-            sent: round((val / (100 / len(phrase))) * 100, 2)
-            for sent, val in coef_.items()
-        }
+
+        if coef_["desgosto"] > 0 and coef_["raiva"] > 0:
+            coef_["desprezo"] = coef_["desgosto"] + coef_["raiva"]
+        if coef_["tristeza"] > 0 and coef_["desgosto"] > 0:
+            coef_["remorso"] = coef_["tristeza"] + coef_["desgosto"]
+        if coef_["surpresa"] > 0 and coef_["tristeza"] > 0:
+            coef_["desaprovação"] = coef_["surpresa"] + coef_["tristeza"]
+        if coef_["surpresa"] > 0 and coef_["medo"] > 0:
+            coef_["temor"] = coef_["surpresa"] + coef_["medo"]
+        if coef_["confiança"] > 0 and coef_["medo"] > 0:
+            coef_["submissão"] = coef_["confiança"] + coef_["medo"]
+        if coef_["alegria"] > 0 and coef_["confiança"] > 0:
+            coef_["amor"] = coef_["alegria"] + coef_["confiança"]
+
+        coef_ = {sent: round(val / n_words, 2) for sent, val in coef_.items()}
+        ssum = sum(coef_.values())
+        coef_ = {sent: round((val / ssum) * 100, 2) for sent, val in coef_.items()}
 
         parsed = {"sintax": info, "emotions": coef_}
 
