@@ -54,7 +54,7 @@ class EmotionNaiveClassifier:
 
         self.__rlsp_stemmer = RSLPStemmer()
         self.__snowball_stemmer = SnowballStemmer("portuguese")
-        self.__lemmatizer = spacy.load("pt")
+        self.__lemmatizer = spacy.load("pt_core_news_sm")
 
     def predict(self, phrase):
         coef_ = {
