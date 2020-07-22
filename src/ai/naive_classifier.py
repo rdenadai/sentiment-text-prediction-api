@@ -61,6 +61,8 @@ class EmotionNaiveClassifier:
             "alegria": 0,
             "surpresa": 0,
             "confiança": 0,
+            "amor": 0,
+            "otimismo": 0,
             "desgosto": 0,
             "medo": 0,
             "raiva": 0,
@@ -70,7 +72,6 @@ class EmotionNaiveClassifier:
             "desaprovação": 0,
             "temor": 0,
             "submissão": 0,
-            "amor": 0,
         }
         verificar_negacao = True if "não" in phrase or "sem" in phrase else False
 
@@ -131,9 +132,9 @@ class EmotionNaiveClassifier:
         coef_ = {sent: round(val, 3) for sent, val in coef_.items()}
         coef_["confiança"] -= coef_["medo"] * 5e-2
         coef_["confiança"] = 0.0 if coef_["confiança"] < 0.0 else coef_["confiança"]
-        coef_["raiva"] += coef_["medo"] * 5e-2
-        coef_["raiva"] += coef_["desgosto"] * 5e-2
-        coef_["alegria"] += coef_["confiança"] * 5e-2
+        # coef_["raiva"] += coef_["medo"] * 5e-2
+        # coef_["raiva"] += coef_["desgosto"] * 5e-2
+        # coef_["alegria"] += coef_["confiança"] * 5e-2
 
         if coef_["desgosto"] > 0 and coef_["raiva"] > 0:
             coef_["desprezo"] = (coef_["desgosto"] + coef_["raiva"]) * 1.1
@@ -147,6 +148,8 @@ class EmotionNaiveClassifier:
             coef_["submissão"] = (coef_["confiança"] + coef_["medo"]) * 1.1
         if coef_["alegria"] > 0 and coef_["confiança"] > 0:
             coef_["amor"] = (coef_["alegria"] + coef_["confiança"]) * 1.1
+        if coef_["alegria"] > 0 and coef_["surpresa"] > 0:
+            coef_["otimismo"] = (coef_["alegria"] + coef_["surpresa"]) * 1.1
 
         coef_ = {sent: round(val / n_words, 2) for sent, val in coef_.items()}
         ssum = sum(coef_.values()) + 1e-20

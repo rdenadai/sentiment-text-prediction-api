@@ -1,5 +1,4 @@
-import { html, Component, render } from '/static/js/preact.standalone.module.js';
-
+import { html, Component, render } from "/static/js/preact.standalone.module.js";
 
 
 class App extends Component {
@@ -47,10 +46,10 @@ class App extends Component {
                 <div class="siimple-content" style="padding-top: 0px; margin: 0px 10px 0px 10px;">
                     <div class="siimple-grid">
                         <div class="siimple-grid-row">
-                            <div class="siimple-grid-col siimple-grid-col--6 siimple-grid-col--sm-12">
+                            <div class="siimple-grid-col siimple-grid-col--7 siimple-grid-col--sm-12">
                                 <${PredictForm} phrase=${phrase} onInput=${this.onInput} onSubmit=${this.onSubmit} />
                             </div>
-                            <div class="siimple-grid-col siimple-grid-col--6 siimple-grid-col--sm-12">
+                            <div class="siimple-grid-col siimple-grid-col--5 siimple-grid-col--sm-12">
                                 <${EmotionPresenter} emotion=${emotion} />
                             </div>
                         </div>
@@ -86,7 +85,6 @@ class PredictForm extends Component {
                     </div>
                 </div>
             </div>
-            
         `;
     }
 
@@ -98,85 +96,73 @@ class EmotionPresenter extends Component {
         super(props);
     }
 
-    render() {
-        // var sintax = "";
-        // if (this.props.emotion) {
-        //     sintax = JSON.stringify(this.props.emotion.sintax, undefined, 4);
-        // }
-        // return html`
-        //     <pre>
-        //         ${sintax}
-        //     </pre>
-        // `;
+    componentDidMount() {
+        var labels = [
+            "Alegria", "Surpresa", "Confiança", "Amor", "Otimismo",
+            "Desgosto", "Medo", "Raiva", "Tristeza", "Desprezo",
+            "Remorso", "Desaprovação", "Temor", "Submissão"
+        ];
+        var valores = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
+        var canvas = document.getElementById("emotionGraph")
+        this.ctx = canvas.getContext("2d");
+        this.chart = new Chart(this.ctx, {
+            type: "horizontalBar",
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: '%',
+                    data: valores,
+                    barThickness: 20,
+                    backgroundColor: [
+                        '#FFEA00DD',
+                        '#CDDC39DD',
+                        '#33691EDD',
+                        '#FFAB00DD',
+                        '#F57C00DD',
+                        '#E91E63DD',
+                        '#9C27B0DD',
+                        '#B71C1CDD',
+                        '#01579BDD',
+                        '#3F51B5DD',
+                        '#AA00FFDD',
+                        '#F44336DD',
+                        '#6200EADD',
+                        '#424242DD',
+                    ],
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+    }
+
+    componentDidUpdate() {
         if (this.props.emotion) {
             var emotion = this.props.emotion.emotions;
-            return html`
-                <div class="siimple-table">
-                    <div class="siimple-table-header">
-                        <div class="siimple-table-row">
-                            <div class="siimple-table-cell">Emoção</div>
-                            <div class="siimple-table-cell">%</div>
-                        </div>
-                    </div>
-                    <div class="siimple-table-body">
-                        <div class="siimple-table-row">
-                            <div class="siimple-table-cell">Alegria</div>
-                            <div class="siimple-table-cell">${emotion["alegria"]}</div>
-                        </div>
-                        <div class="siimple-table-row">
-                            <div class="siimple-table-cell">Surpresa</div>
-                            <div class="siimple-table-cell">${emotion["surpresa"]}</div>
-                        </div>
-                        <div class="siimple-table-row">
-                            <div class="siimple-table-cell">Confiança</div>
-                            <div class="siimple-table-cell">${emotion["confiança"]}</div>
-                        </div>
-                        <div class="siimple-table-row">
-                            <div class="siimple-table-cell">Amor</div>
-                            <div class="siimple-table-cell">${emotion["amor"]}</div>
-                        </div>
-                        <div class="siimple-table-row">
-                            <div class="siimple-table-cell">Desgosto</div>
-                            <div class="siimple-table-cell">${emotion["desgosto"]}</div>
-                        </div>
-                        <div class="siimple-table-row">
-                            <div class="siimple-table-cell">Medo</div>
-                            <div class="siimple-table-cell">${emotion["medo"]}</div>
-                        </div>
-                        <div class="siimple-table-row">
-                            <div class="siimple-table-cell">Raiva</div>
-                            <div class="siimple-table-cell">${emotion["raiva"]}</div>
-                        </div>
-                        <div class="siimple-table-row">
-                            <div class="siimple-table-cell">Tristeza</div>
-                            <div class="siimple-table-cell">${emotion["tristeza"]}</div>
-                        </div>
-                        <div class="siimple-table-row">
-                            <div class="siimple-table-cell">Desprezo</div>
-                            <div class="siimple-table-cell">${emotion["desprezo"]}</div>
-                        </div>
-                        <div class="siimple-table-row">
-                            <div class="siimple-table-cell">Remorso</div>
-                            <div class="siimple-table-cell">${emotion["remorso"]}</div>
-                        </div>
-                        <div class="siimple-table-row">
-                            <div class="siimple-table-cell">Desaprovação</div>
-                            <div class="siimple-table-cell">${emotion["desaprovação"]}</div>
-                        </div>
-                        <div class="siimple-table-row">
-                            <div class="siimple-table-cell">Temor</div>
-                            <div class="siimple-table-cell">${emotion["temor"]}</div>
-                        </div>
-                        <div class="siimple-table-row">
-                            <div class="siimple-table-cell">Submissão</div>
-                            <div class="siimple-table-cell">${emotion["submissão"]}</div>
-                        </div>
+            this.chart.data.datasets[0].data = _.values(emotion);
+            this.chart.update();
+        }
+    }
+
+    render() {
+        return html`
+            <div class="siimple-card" style="max-width: auto;">
+                <div class="siimple-card-body">
+                    <div class="siimple-card-title">Resultado:</div>
+                    <div class="siimple-rule"></div>
+                    <div class="siimple-field">
+                        <canvas id="emotionGraph" style="min-height: 300px;"></canvas>
                     </div>
                 </div>
-            `;
-        }
-        return html``
+            </div>`
     }
 }
 
