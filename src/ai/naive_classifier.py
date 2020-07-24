@@ -152,7 +152,7 @@ class EmotionNaiveClassifier:
         coef_ = {sent: round(val / n_words, 2) for sent, val in coef_.items()}
         ssum = sum(coef_.values()) + 1e-20
         coef_ = {sent: round((val / ssum) * 100, 2) for sent, val in coef_.items()}
-        if ssum == 0:
+        if round(ssum, 2) == 0:
             coef_["neutro"] = 100.0
 
         parsed = {"sintax": info, "emotions": coef_}

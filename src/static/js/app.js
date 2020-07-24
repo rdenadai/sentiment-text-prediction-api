@@ -7,6 +7,7 @@ class App extends Component {
         super(props);
 
         this.state = {
+            chars: 0,
             phrase: "",
             emotion: null
         };
@@ -18,6 +19,7 @@ class App extends Component {
     onInput = e => {
         const { value } = e.target;
         this.setState({ phrase: value })
+        this.setState({ chars: value.length })
     }
 
     onSubmit = e => {
@@ -37,7 +39,7 @@ class App extends Component {
         });
     }
 
-    render(_, { phrase, emotion }) {
+    render(_, { chars, phrase, emotion }) {
         return html`
             <div>
                 <div class="siimple-navbar siimple-navbar--dark siimple-navbar--fluid">
@@ -47,7 +49,7 @@ class App extends Component {
                     <div class="siimple-grid">
                         <div class="siimple-grid-row">
                             <div class="siimple-grid-col siimple-grid-col--7 siimple-grid-col--sm-12">
-                                <${PredictForm} phrase=${phrase} onInput=${this.onInput} onSubmit=${this.onSubmit} />
+                                <${PredictForm} phrase=${phrase} chars=${chars} onInput=${this.onInput} onSubmit=${this.onSubmit} />
                             </div>
                             <div class="siimple-grid-col siimple-grid-col--5 siimple-grid-col--sm-12">
                                 <${EmotionPresenter} emotion=${emotion} />
@@ -76,7 +78,8 @@ class PredictForm extends Component {
                         <form onSubmit=${this.props.onSubmit}>
                             <div class="siimple-field">
                                 <div class="siimple-field-label">Digite uma frase:</div>
-                                <textarea class="siimple-textarea siimple-textarea--fluid" rows="10" onInput=${this.props.onInput}>${this.props.phrase}</textarea>
+                                <textarea class="siimple-textarea siimple-textarea--fluid" rows="10" maxLength="512" onInput=${this.props.onInput}>${this.props.phrase}</textarea>
+                                <div style="text-align: right;">${this.props.chars} / 512</div>
                             </div>
                             <div class="siimple-field">
                                 <button type="submit" class="siimple-btn siimple-btn--success">Classificar</button>
