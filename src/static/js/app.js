@@ -100,7 +100,7 @@ class EmotionPresenter extends Component {
         var labels = [
             "Alegria", "Surpresa", "Confiança", "Amor", "Otimismo",
             "Desgosto", "Medo", "Raiva", "Tristeza", "Desprezo",
-            "Remorso", "Desaprovação", "Temor", "Submissão"
+            "Remorso", "Desaprovação", "Temor", "Submissão", "Neutro"
         ];
         var valores = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
@@ -129,6 +129,7 @@ class EmotionPresenter extends Component {
                         '#F44336DD',
                         '#6200EADD',
                         '#424242DD',
+                        '#DDDDDDDD',
                     ],
                 }]
             },

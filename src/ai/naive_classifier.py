@@ -58,20 +58,21 @@ class EmotionNaiveClassifier:
 
     def predict(self, phrase):
         coef_ = {
-            "alegria": 0,
-            "surpresa": 0,
-            "confiança": 0,
-            "amor": 0,
-            "otimismo": 0,
-            "desgosto": 0,
-            "medo": 0,
-            "raiva": 0,
-            "tristeza": 0,
-            "desprezo": 0,
-            "remorso": 0,
-            "desaprovação": 0,
-            "temor": 0,
-            "submissão": 0,
+            "alegria": 0.0,
+            "surpresa": 0.0,
+            "confiança": 0.0,
+            "amor": 0.0,
+            "otimismo": 0.0,
+            "desgosto": 0.0,
+            "medo": 0.0,
+            "raiva": 0.0,
+            "tristeza": 0.0,
+            "desprezo": 0.0,
+            "remorso": 0.0,
+            "desaprovação": 0.0,
+            "temor": 0.0,
+            "submissão": 0.0,
+            "neutro": 0.0,
         }
         verificar_negacao = True if "não" in phrase or "sem" in phrase else False
 
@@ -132,29 +133,27 @@ class EmotionNaiveClassifier:
         coef_ = {sent: round(val, 3) for sent, val in coef_.items()}
         coef_["confiança"] -= coef_["medo"] * 5e-2
         coef_["confiança"] = 0.0 if coef_["confiança"] < 0.0 else coef_["confiança"]
-        # coef_["raiva"] += coef_["medo"] * 5e-2
-        # coef_["raiva"] += coef_["desgosto"] * 5e-2
-        # coef_["alegria"] += coef_["confiança"] * 5e-2
 
         if coef_["desgosto"] > 0 and coef_["raiva"] > 0:
-            coef_["desprezo"] = (coef_["desgosto"] + coef_["raiva"]) * 1.1
+            coef_["desprezo"] = (coef_["desgosto"] + coef_["raiva"]) * 1.25
         if coef_["tristeza"] > 0 and coef_["desgosto"] > 0:
-            coef_["remorso"] = (coef_["tristeza"] + coef_["desgosto"]) * 1.1
+            coef_["remorso"] = (coef_["tristeza"] + coef_["desgosto"]) * 1.25
         if coef_["surpresa"] > 0 and coef_["tristeza"] > 0:
-            coef_["desaprovação"] = (coef_["surpresa"] + coef_["tristeza"]) * 1.1
+            coef_["desaprovação"] = (coef_["surpresa"] + coef_["tristeza"]) * 1.25
         if coef_["surpresa"] > 0 and coef_["medo"] > 0:
-            coef_["temor"] = (coef_["surpresa"] + coef_["medo"]) * 1.1
+            coef_["temor"] = (coef_["surpresa"] + coef_["medo"]) * 1.25
         if coef_["confiança"] > 0 and coef_["medo"] > 0:
-            coef_["submissão"] = (coef_["confiança"] + coef_["medo"]) * 1.1
+            coef_["submissão"] = (coef_["confiança"] + coef_["medo"]) * 1.25
         if coef_["alegria"] > 0 and coef_["confiança"] > 0:
-            coef_["amor"] = (coef_["alegria"] + coef_["confiança"]) * 1.1
+            coef_["amor"] = (coef_["alegria"] + coef_["confiança"]) * 1.25
         if coef_["alegria"] > 0 and coef_["surpresa"] > 0:
-            coef_["otimismo"] = (coef_["alegria"] + coef_["surpresa"]) * 1.1
+            coef_["otimismo"] = (coef_["alegria"] + coef_["surpresa"]) * 1.25
 
         coef_ = {sent: round(val / n_words, 2) for sent, val in coef_.items()}
         ssum = sum(coef_.values()) + 1e-20
         coef_ = {sent: round((val / ssum) * 100, 2) for sent, val in coef_.items()}
+        if ssum == 0:
+            coef_["neutro"] = 100.0
 
         parsed = {"sintax": info, "emotions": coef_}
-
         return parsed
