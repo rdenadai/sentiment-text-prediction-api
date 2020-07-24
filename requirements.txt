@@ -4,9 +4,6 @@ python-decouple==3.3
 pandas==1.0.5
 nltk==3.5
 spacy==2.3.2
-# gensim==3.8.3
-# Keras==2.4.3
-# tensorflow-gpu==2.2.0
 uvloop==0.14.0
 ujson==3.0.0
 uvicorn==0.11.6
@@ -15,5 +12,4 @@ fastapi==0.60.0
 Jinja2==2.11.2
 aiofiles==0.5.0
 databases==0.3.2
-https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.3.1/en_core_web_sm-2.3.1.tar.gz
 https://github.com/explosion/spacy-models/releases/download/pt_core_news_sm-2.3.0/pt_core_news_sm-2.3.0.tar.gz
