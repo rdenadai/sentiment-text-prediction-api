@@ -6,7 +6,7 @@ nltk==3.5
 spacy==2.3.2
 uvloop==0.14.0
 ujson==3.0.0
-uvicorn==0.11.6
+uvicorn==0.11.7
 gunicorn==20.0.4
 fastapi==0.60.0
 Jinja2==2.11.2
