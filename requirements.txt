@@ -9,7 +9,7 @@ ujson==3.0.0
 uvicorn==0.11.7
 gunicorn==20.0.4
 fastapi==0.60.0
-Jinja2==2.11.2
+Jinja2==2.11.3
 aiofiles==0.5.0
 databases==0.3.2
 https://github.com/explosion/spacy-models/releases/download/pt_core_news_sm-2.3.0/pt_core_news_sm-2.3.0.tar.gz
