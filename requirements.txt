@@ -2,7 +2,7 @@ flake8==3.8.3
 black==19.10b0
 python-decouple==3.3
 pandas==1.0.5
-nltk==3.5
+nltk==3.6.5
 spacy==2.3.2
 uvloop==0.14.0
 ujson==3.0.0
